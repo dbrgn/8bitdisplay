@@ -1,6 +1,7 @@
 
 //General constants
 #define MUXDELAY 10
+#define SERIALTIMEOUT 1000;
 
 //Pin mappings for the digits
 #define DIGIT_1 1
@@ -41,9 +42,9 @@ byte eight_bit[8] = {
   0b00110100
 };
 
-
-byte display_buffer[8];
-byte digit_pins[] = {
+unsigned long time;
+char display_buffer[8];
+char digit_pins[] = {
   DIGIT_1,DIGIT_2,DIGIT_3,DIGIT_4,DIGIT_5,DIGIT_6,DIGIT_7,DIGIT_8};
 
 void setup() {                
@@ -53,11 +54,20 @@ void setup() {
     pinMode(digit_pins[n],OUTPUT);
     digitalWrite(digit_pins[n],LOW);
   }
+  Serial.begin(9600);
+  Serial.println("8bit Display is ready!");
+  time = millis();
 }
 
 // the loop runs over and over again forever:
 void loop() {
-  for(byte n=0; n<8;++n){
+  if(Serial.available()==8){
+    Serial.readBytes(display_buffer,8);
+    Serial.print("New string received: ");
+    printBuffer();
+  }
+  
+   for(byte n=0; n<8;++n){
     shiftOut(DATA, CLOCK, LSBFIRST, display_buffer[n]);
     digitalWrite(digit_pins[n],HIGH);
     delay(MUXDELAY);
@@ -65,6 +75,14 @@ void loop() {
   }
 
 }
+
+void printBuffer(){
+  for(int i=0;i<8;++i){
+    Serial.print(display_buffer[i]);
+  }
+  Serial.println();
+}
+
 
 
 
