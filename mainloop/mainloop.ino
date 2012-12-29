@@ -42,7 +42,6 @@ byte eight_bit[8] = {
   0b00110100
 };
 
-unsigned long time;
 char display_buffer[8];
 char digit_pins[] = {
   DIGIT_1,DIGIT_2,DIGIT_3,DIGIT_4,DIGIT_5,DIGIT_6,DIGIT_7,DIGIT_8};
@@ -56,7 +55,6 @@ void setup() {
   }
   Serial.begin(9600);
   Serial.println("8bit Display is ready!");
-  time = millis();
 }
 
 // the loop runs over and over again forever:
