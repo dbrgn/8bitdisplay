@@ -14,8 +14,8 @@
 #define DIGIT_8 8
 
 //Pin mappings for the 74hc164 multiplexer (7 Segment + point multiplexing)
-#define DATA 9
-#define CLOCK 10
+#define DATA 2
+#define CLOCK 3
 
 /*
 Segment numbering:
@@ -48,6 +48,8 @@ char digit_pins[] = {
 
 void setup() {                
   pinMode(CLOCK, OUTPUT);
+  pinMode(CLEAR,OUTPUT);
+  digitalWrite(CLEAR,HIGH);
   pinMode(DATA , OUTPUT);
   for(int n=0; n<8;++n){
     pinMode(digit_pins[n],OUTPUT);
