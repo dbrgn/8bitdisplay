@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import time
 import serial
+from collections import deque
 
 
 class SevenSegmentDisplay(object):
@@ -65,12 +66,24 @@ class SevenSegmentDisplay(object):
         self.ser.write(ascii_frames)
         self.ser.flush()
 
-    def write_string(self, string):
+    def _convert_string(self, string):
+        """Take a string as input, return frame."""
         assert len(string) <= self.digits, 'Max string length: {}'.format(self.digits)
-        frames = []
+        frame = []
         for char in string:
-            frames.append(self.get_char(char))
-        self.write(frames)
+            frame.append(self.get_char(char))
+        return frame
+
+    def write_string(self, string):
+        frame = self._convert_string(string)
+        self.write(frame)
+
+    def rotate_string(self, string, delay=0.2):
+        frame = deque(self._convert_string(string))
+        while 1:
+            self.write(frame)
+            frame.rotate(1)
+            time.sleep(delay)
 
     @classmethod
     def get_char(cls, char):
